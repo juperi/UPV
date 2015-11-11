@@ -26,19 +26,35 @@ def compute_gradient_simple(grad,img,width,height):
 
 # Type 1
 def compute_gradient_sobel(grad,img,width,height):
+	# First and last row different treatment (type 1)
+	for x in range(1, width-1):
+		grad[0][x] = abs(img[0][x-1] - img[0][x+1]) # first
+		grad[height-1][x] = abs(img[height-1][x-1] - img[height-1][x+1]) # last
 
 	for y in range(1, height-1):
 		for x in range(1, width-1):
-			gx_pos = 4 * img[x][y] - 2 * img[x-1][y] - img[x-1][y+1] - img[x-1][y-1]
-			gx_neg = 4 * img[x][y] - 2 * img[x+1][y] - img[x+1][y+1] - img[x+1][y-1]
+			"""
+			gx_pos = 4 * img[y][x] - 2 * img[y-1][x] - img[y-1][x+1] - img[y-1][x-1]
+			gx_neg = 4 * img[y][x] - 2 * img[y+1][x] - img[y+1][x+1] - img[y+1][x-1]
 			gx = gx_pos - gx_neg
 		
-			gy_pos = 4 * img[x][y] - 2 * img[x][y-1] - img[x+1][y-1] - img[x-1][y-1]
-			gy_neg = 4 * img[x][y] - 2 * img[x][y+1] - img[x+1][y+1] - img[x-1][y+1]
+			gy_pos = 4 * img[y][x] - 2 * img[y][x-1] - img[y+1][x-1] - img[y-1][x-1]
+			gy_neg = 4 * img[y][x] - 2 * img[y][x+1] - img[y+1][x+1] - img[y-1][x+1]
 			gy = gy_pos - gy_neg
 			
-			grad[x,y] = fabs(gx) + fabs(gy)
+			grad[y][x] = math.fabs(gx) + math.fabs(gy)
+			"""
+			gx_row1 = (-1 * img[y-1][x-1]) + (1 * img[y+1][x-1])
+			gx_row2 = (-2 * img[y-1][x]) + (2 * img[y+1][x])
+			gx_row3 = (-1 * img[y-1][x+1]) + (1* img[y+1][x+1])
+			gx = gx_row1 + gx_row2 + gx_row3
 
+			gy_row1 = (-1 * img[y-1][x-1]) + (-2 * img[y][x-1]) + (-1 * img[y+1][x-1])
+			gy_row3 = (1 * img[y-1][x+1]) + (2 * img[y][x+1]) + (1 * img[y+1][x+1])
+			gy = gy_row1 + gy_row3 # gy_row2 = 0
+			
+			grad[y][x] = math.fabs(gx) + math.fabs(gy)
+			
 # Type 2
 def compute_gradient_third(grad,img,width,height):
 	# First and last row different treatment (type 1)
@@ -86,13 +102,13 @@ def dp_seam_carving(width,height,grad,mat):
 		mat[y][width-1] = infty
 		### COMPLETE ###
 		for x in range(1, width-1):
-			mat[y][x] = grad[y][x] + min(grad[y-1][x-1],grad[y-1][x],grad[y-1][x+1])
+			mat[y][x] = grad[y][x] + min(mat[y-1][x-1],mat[y-1][x],mat[y-1][x+1])
 
 	# min_val, min_point = COMPLETE
 	# retrieve the best path from min_point
 	# path = [min_point]
 	# path.reverse()
-	min_val,min_point = min((mat[height-1][x],x) for x in xrange(0,width))
+	min_val,min_point = min((mat[height-1][x],x) for x in xrange (width))#(0,width))
 	path = [min_point]
 
 	for y in sorted(range(0,height-1), reverse = True): # sorted descending order		
