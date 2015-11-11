@@ -1,0 +1,6 @@
+Almacen con 3 objetos:
+Televisor Panasonic pesa 4 kg vale 300 euros
+DVD hitachi pesa 3500 g vale 55 dolares
+portatil ultrabook pesa 900 g vale 1200 euros
+En la mochila roja caben 4 kg
+En la mochila azul claro caben 11000 g
