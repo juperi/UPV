@@ -33,17 +33,7 @@ def compute_gradient_sobel(grad,img,width,height):
 
 	for y in range(1, height-1):
 		for x in range(1, width-1):
-			"""
-			gx_pos = 4 * img[y][x] - 2 * img[y-1][x] - img[y-1][x+1] - img[y-1][x-1]
-			gx_neg = 4 * img[y][x] - 2 * img[y+1][x] - img[y+1][x+1] - img[y+1][x-1]
-			gx = gx_pos - gx_neg
-		
-			gy_pos = 4 * img[y][x] - 2 * img[y][x-1] - img[y+1][x-1] - img[y-1][x-1]
-			gy_neg = 4 * img[y][x] - 2 * img[y][x+1] - img[y+1][x+1] - img[y-1][x+1]
-			gy = gy_pos - gy_neg
-			
-			grad[y][x] = math.fabs(gx) + math.fabs(gy)
-			"""
+
 			gx_row1 = (-1 * img[y-1][x-1]) + (1 * img[y+1][x-1])
 			gx_row2 = (-2 * img[y-1][x]) + (2 * img[y+1][x])
 			gx_row3 = (-1 * img[y-1][x+1]) + (1* img[y+1][x+1])
