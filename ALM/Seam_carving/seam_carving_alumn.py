@@ -25,9 +25,19 @@ def compute_gradient_simple(grad,img,width,height):
             grad[y][x] = abs(img[y][x-1] - img[y][x+1])
 
 # Type 1
-#def compute_gradient_Sobel(grad,img,width,height): ## Mod
-	
-	
+def compute_gradient_sobel(grad,img,width,height):
+
+	for y in range(1, height-1):
+		for x in range(1, width-1):
+			gx_pos = 4 * img[x][y] - 2 * img[x-1][y] - img[x-1][y+1] - img[x-1][y-1]
+			gx_neg = 4 * img[x][y] - 2 * img[x+1][y] - img[x+1][y+1] - img[x+1][y-1]
+			gx = gx_pos - gx_neg
+		
+			gy_pos = 4 * img[x][y] - 2 * img[x][y-1] - img[x+1][y-1] - img[x-1][y-1]
+			gy_neg = 4 * img[x][y] - 2 * img[x][y+1] - img[x+1][y+1] - img[x-1][y+1]
+			gy = gy_pos - gy_neg
+			
+			grad[x,y] = fabs(gx) + fabs(gy)
 
 # Type 2
 def compute_gradient_third(grad,img,width,height):
@@ -46,9 +56,12 @@ def compute_gradient(grad,img,width,height,type):
 		compute_gradient_simple(grad,img,width,height)
 	# COMPLETE to add new gradient types
 	if type==1:
-		compute_gradient_Sobel(grad,img,width,height)
+		compute_gradient_sobel(grad,img,width,height)
 	if type==2:
 		compute_gradient_third(grad,img,width,height)
+	if type>2:
+		print u"gradient_type{0|1|2}"
+		sys.exit(1)
 
 def paint_seam(height,seam_path,color_matrix,path_color=[0,0,0]):
 	for y in range(height):
