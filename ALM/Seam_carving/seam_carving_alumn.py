@@ -108,7 +108,7 @@ def dp_seam_carving(width,height,grad,mat):
 	# retrieve the best path from min_point
 	# path = [min_point]
 	# path.reverse()
-	min_val,min_point = min((mat[height-1][x],x) for x in xrange (width))#(0,width))
+	min_val,min_point = min((mat[height-1][x],x) for x in xrange (width))
 	path = [min_point]
 
 	for y in sorted(range(0,height-1), reverse = True): # sorted descending order		
