@@ -34,13 +34,13 @@ def compute_gradient_sobel(grad,img,width,height):
 	for y in range(1, height-1):
 		for x in range(1, width-1):
 
-			gx_row1 = (-1 * img[y-1][x-1]) + (1 * img[y+1][x-1])
-			gx_row2 = (-2 * img[y-1][x]) + (2 * img[y+1][x])
-			gx_row3 = (-1 * img[y-1][x+1]) + (1* img[y+1][x+1])
+			gx_row1 = (-1 * img[y-1][x-1]) + (1 * img[y-1][x+1])
+			gx_row2 = (-2 * img[y][x-1]) + (2 * img[y][x+1])
+			gx_row3 = (-1 * img[y+1][x-1]) + (1* img[y+1][x+1])
 			gx = gx_row1 + gx_row2 + gx_row3
 
-			gy_row1 = (-1 * img[y-1][x-1]) + (-2 * img[y][x-1]) + (-1 * img[y+1][x-1])
-			gy_row3 = (1 * img[y-1][x+1]) + (2 * img[y][x+1]) + (1 * img[y+1][x+1])
+			gy_row1 = (-1 * img[y-1][x-1]) + (-2 * img[y-1][x]) + (-1 * img[y-1][x+1])
+			gy_row3 = (1 * img[y+1][x-1]) + (2 * img[y+1][x]) + (1 * img[y+1][x+1])
 			gy = gy_row1 + gy_row3 # gy_row2 = 0
 			
 			grad[y][x] = math.fabs(gx) + math.fabs(gy)
@@ -98,7 +98,7 @@ def dp_seam_carving(width,height,grad,mat):
 	# retrieve the best path from min_point
 	# path = [min_point]
 	# path.reverse()
-	min_val,min_point = min((mat[height-1][x],x) for x in xrange (width))
+	min_val,min_point = min((mat[height-1][x],x) for x in xrange (1,width-1))
 	path = [min_point]
 
 	for y in sorted(range(0,height-1), reverse = True): # sorted descending order		
