@@ -43,7 +43,7 @@ def compute_gradient_sobel(grad,img,width,height):
 			gy_row3 = (1 * img[y+1][x-1]) + (2 * img[y+1][x]) + (1 * img[y+1][x+1])
 			gy = gy_row1 + gy_row3 # gy_row2 = 0
 			
-			grad[y][x] = math.fabs(gx) + math.fabs(gy)
+			grad[y][x] = math.sqrt(gx*gx + gy*gy)
 			
 # Type 2
 def compute_gradient_third(grad,img,width,height):
