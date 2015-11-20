@@ -1,6 +1,6 @@
 package persistencia.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class ClienteDTO {
 	private String dni;
@@ -8,7 +8,7 @@ public class ClienteDTO {
 	private String direccion;
 	private String poblacion;
 	private String codPostal;
-	private LocalDateTime fechaCanetConducir;
+	private Date fechaCanetConducir;
 	private String digitosTC;
 	private int mesTC;
 	private int añoTC;
@@ -17,7 +17,7 @@ public class ClienteDTO {
 
 	public ClienteDTO(String dni, String nombreyApellidos,
 			String direccion, String poblacion, String codPostal,
-			LocalDateTime fechaCanetConducir, String digitosTC, int mesTC,
+			Date fechaCanetConducir, String digitosTC, int mesTC,
 			int añoTC, int cvcTC, String tipoTC) {
 		this.dni = dni;
 		this.nombreyApellidos = nombreyApellidos;
@@ -56,10 +56,10 @@ public class ClienteDTO {
 	public void setCodPostal(String codPostal) {
 		this.codPostal = codPostal;
 	}
-	public LocalDateTime getFechaCanetConducir() {
+	public Date getFechaCanetConducir() {
 		return fechaCanetConducir;
 	}
-	public void setFechaCanetConducir(LocalDateTime fechaCanetConducir) {
+	public void setFechaCanetConducir(Date fechaCanetConducir) {
 		this.fechaCanetConducir = fechaCanetConducir;
 	}
 	public String getDigitosTC() {

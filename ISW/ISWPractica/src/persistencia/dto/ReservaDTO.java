@@ -1,20 +1,19 @@
 package persistencia.dto;
 
-
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class ReservaDTO {
 	private int id;
-	private LocalDateTime fechaRecogida;
-	private LocalDateTime fechaDevolucion;
+	private Date fechaRecogida;
+	private Date fechaDevolucion;
 	private int modalidadAlquiler;
 	private String dniCliente;
 	private String nombreCategoria;
 	private int idSucursalRecogida;
 	private int idSucursalDevolucion;
 
-	public ReservaDTO(int id, LocalDateTime fechaRecogida,
-			LocalDateTime fechaDevolucion, int modalidadAlquiler,
+	public ReservaDTO(int id, Date fechaRecogida,
+			Date fechaDevolucion, int modalidadAlquiler,
 			String dniCliente, String nombreCategoria, int idSucursalRecogida,
 			int idSucursalDevolucion) {
 		this.id = id;
@@ -35,19 +34,19 @@ public class ReservaDTO {
 		this.id = id;
 	}
 
-	public LocalDateTime getFechaRecogida() {
+	public Date getFechaRecogida() {
 		return fechaRecogida;
 	}
 
-	public void setFechaRecogida(LocalDateTime fechaRecogida) {
+	public void setFechaRecogida(Date fechaRecogida) {
 		this.fechaRecogida = fechaRecogida;
 	}
 
-	public LocalDateTime getFechaDevolucion() {
+	public Date getFechaDevolucion() {
 		return fechaDevolucion;
 	}
 
-	public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
+	public void setFechaDevolucion(Date fechaDevolucion) {
 		this.fechaDevolucion = fechaDevolucion;
 	}
 

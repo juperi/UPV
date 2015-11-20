@@ -25,7 +25,7 @@ public class DAL {
 
     public DAL() throws DAOExcepcion{
     	catDAO = new CategoriaDAOImp();
-    	//sucDAO = new SucursalDAOImp();
+    	sucDAO = new SucursalDAOImp();
     }
 
     /*************************

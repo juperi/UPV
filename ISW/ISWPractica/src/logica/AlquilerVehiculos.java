@@ -154,7 +154,7 @@ public class AlquilerVehiculos {
 			anyadir_categoria(new Categoria(catDTO.getNombre(),
 							catDTO.getPrecioModIlimitada(), catDTO.getPrecioModKms(),
 							catDTO.getPrecioKMModKms(), catDTO.getPrecioSeguroTRiesgo(),
-							catDTO.getPrecioSeguroTerceros(), consultar_categoria(catDTO.getNombreCategoriaSuperior())));
+							catDTO.getPrecioSeguroTerceros(), null)); // Null por defecto, despues se asigna cat superior
 		}
 		// Actualizar los enlaces que representan la relacion "superior"
 		for (CategoriaDTO catDTO : listacatDTO)
