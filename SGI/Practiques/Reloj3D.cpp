@@ -5,9 +5,6 @@
 
 #include <Utilidades.h>		// Libreria completa
 #include <time.h>			// Libreria tiempo
-#include <math.h>
-
-#define tasaFPS 60 //fps a los que se movera la estrella central
 
 struct tm *newtime;
 time_t ltime;
@@ -84,13 +81,13 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//gluLookAt(0,4,5, 0,0,0, 0,1,0); // subimos la cámara
-	gluLookAt(0,0,6.5, 0,0,0, 0,1,0); // Cámara normal
+	gluLookAt(0,1,7, 0,0,0, 0,1,0); // subimos la cámara
+	//gluLookAt(0,0,6.5, 0,0,0, 0,1,0); // Cámara normal
 
 	/** Esfera exterior **/
 	glLineWidth(1.0f);
 	glColor3f(0.3,0.6,0.6);
-	glutWireSphere(1.0,20,20);
+	glutWireSphere(1.0,10,10);
 
 	/** Puntos reloj **/;
 	glPushMatrix();
@@ -99,16 +96,15 @@ void display()
 	glPopMatrix();
 
 	/** Esfera horas reloj **/
-	int rotar = 0; // Inicialmente 0º
+	int rot = 0; // Inicialmente 0º
 	for (int i = 0; i<12; i++){
-
 		glPushMatrix();
-		glColor3f(0,0.8,0); // Color Verde
-		glRotatef(rotar,0,0,1); // Rotacion sobre eje z
+		glColor3f(0,0.6,0.4); // Color Verde
+		glRotatef(rot,0,0,1); // Rotacion sobre eje z
 		glTranslatef(0,0.9,0);
 		glutSolidSphere(0.05,10,10);
 		glPopMatrix();
-		rotar += 30;
+		rot += 30;
 	}
 
 	/** Estrellas rotatorias interiores **/
@@ -118,7 +114,6 @@ void display()
 
 	int pos = 0; // Inicialmente 0º
 	for (int i=0; i<4; i++){ // Dibuja 4 estrellas
-
 		glPushMatrix();
 		glRotatef(pos,0,1,0); // Rotacion sobre eje y
 		glColor3ub(rand()%255,rand()%255,rand()%255); // Color aleatorio
@@ -137,7 +132,7 @@ void display()
     glRotatef((360/60) * newtime->tm_sec,0.0,0.0,-1.0);
     glBegin(GL_LINES);
     glVertex2f(0,0);
-    glVertex2f(0,0.8);
+    glVertex2f(0,0.85);
     glEnd();
 	glPopMatrix();
 
@@ -149,7 +144,7 @@ void display()
 	glRotatef(90,-1,0,0);
     glRotatef((360/60) * newtime->tm_min,0,1,0);
 	glTranslatef(0,0,0.25); // Lo trasladamos hacia arriba (eje y)
-    glutWireCone(0.1,0.5,10,10);
+    glutWireCone(0.075,0.5,10,10);
     glPopMatrix();
 
 	/** Triangulo marca horas **/
