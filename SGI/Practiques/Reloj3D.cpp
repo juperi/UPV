@@ -1,6 +1,6 @@
 /*
 	Practica 5 SGI
-	Reloj 3D Animado
+	Reloj Analógico 3D Animado
 */
 
 #include <Utilidades.h>		// Libreria completa
@@ -193,15 +193,31 @@ void onTimer(int tiempo)
 	alfa += 0.01; 
 	if (alfa > 2*PI) alfa = 0; // Si completa la vuelta, empieza de nuevo
 
-	beta  += 2; // Estrellas centrales
-	
-	if (crece == true){ // Aguja horas
-		gamma += 0.005;
+	/* Control de tiempo */
+	// Modificar el angulo a velocidad angular constante p.e. omega = 60º/sg
+	static const float omega = 100;
+	// Pido la hora por primera vez
+	static int hora_anterior = glutGet(GLUT_ELAPSED_TIME);
+
+	int hora_actual = glutGet(GLUT_ELAPSED_TIME);
+
+	//Tiempo transcurrido en msg
+	float tiempo_transcurrido = hora_actual-hora_anterior;
+
+	// Angulo estrellas centrales
+	beta += omega * tiempo_transcurrido/1000.0;
+
+	// Angulo aguja marca horas
+	if (crece == true){
+		gamma += omega * tiempo_transcurrido/100000.0;
 		if (gamma >= 2) crece = false;
 	}else{
 		if (gamma <= 0.75) crece = true;
-		gamma -= 0.005;
+		gamma -= omega * tiempo_transcurrido/100000.0;
 	}
+
+	// Actualizar hora_anterior a la hora_actual
+	hora_anterior = hora_actual;
 
 	glutPostRedisplay();
 	glutTimerFunc(10, onTimer, 1);
@@ -215,7 +231,7 @@ void main(int argc, char** argv)
 
 	// Inicializar la ventana
 	glutInitWindowSize(600,600);
-	glutCreateWindow("Reloj 3D");
+	glutCreateWindow("Reloj Analógico 3D");
 
 	// Inicializacion propia
 	init();
