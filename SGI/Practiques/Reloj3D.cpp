@@ -9,8 +9,8 @@
 struct tm *newtime;
 time_t ltime;
 
-static float rx,ry,rz,alfa;
-
+static float alfa,beta,gamma;
+static bool crece = true;
 static GLuint triangulo1, triangulo2, puntos;
 
 void init()
@@ -29,38 +29,38 @@ void init()
 	glEnd(); // Cierra glBegin
 	glEndList();
 	
-	/*	Triangulo 2	*/
-	triangulo2 = glGenLists(1); // Obtiene id list
-	glNewList(triangulo2,GL_COMPILE); // Abre list
+	/*	Triangulo 2 (inverso) */
+	triangulo2 = glGenLists(1);
+	glNewList(triangulo2,GL_COMPILE);
 
 	glBegin(GL_TRIANGLE_STRIP);
 		float r3 = -1.0;
 		float r4 = -0.7;
 		for (int i = 0; i<5; i++){
-			glVertex3f(r3*sin(i*2*PI/3),r3*cos(i*2*PI/3),0.0); // vertices triangulo grande
-			glVertex3f(r4*sin(i*2*PI/3),r4*cos(i*2*PI/3),0.0); // vertices tirangulo pequeño
+			glVertex3f(r3*sin(i*2*PI/3),r3*cos(i*2*PI/3),0.0);
+			glVertex3f(r4*sin(i*2*PI/3),r4*cos(i*2*PI/3),0.0);
 		}
-	glEnd(); // Cierra glBegin
+	glEnd();
 	glEndList();
 
 	/**	Puntos **/
-	puntos = glGenLists(1); // Obtiene id list
-	glNewList(puntos,GL_COMPILE); // Abre list
+	puntos = glGenLists(1);
+	glNewList(puntos,GL_COMPILE);
 
 	glBegin(GL_POINTS);
 		float r = 0.9;
 		for (int i = 0; i<60; i++){
 			glVertex3f(r*sin(i*2*PI/60),r*cos(i*2*PI/60),0.0);
 		}
-	glEnd(); // Cierra glBegin
+	glEnd();
 	glEndList();
+
+	// Activo tamaño puntos
+	glEnable(GL_POINT_SIZE);
+	glPointSize(10);
 
 	/* Activo test de visibilidad */
 	glEnable(GL_DEPTH_TEST);
-
-	// Activo puntos
-	glEnable(GL_POINT_SIZE);
-	glPointSize(10);
 }
 
 void display()
@@ -81,7 +81,7 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0,1,7, 0,0,0, 0,1,0); // subimos la cámara
+	gluLookAt(0,3,6, 0,0,0, 0,1,0); // subimos la cámara
 	//gluLookAt(0,0,6.5, 0,0,0, 0,1,0); // Cámara normal
 
 	/** Esfera exterior **/
@@ -110,13 +110,13 @@ void display()
 	/** Estrellas rotatorias interiores **/
 	glPushMatrix();
 	glScalef(0.25,0.25,0.25); // Diametro 1/10
-	//glRotatef(alfa,0,1,0); // Rotacion sobre eje y
+	glRotatef(beta,0,1,0); // Rotacion constante sobre eje y
 
 	int pos = 0; // Inicialmente 0º
 	for (int i=0; i<4; i++){ // Dibuja 4 estrellas
 		glPushMatrix();
 		glRotatef(pos,0,1,0); // Rotacion sobre eje y
-		glColor3ub(rand()%255,rand()%255,rand()%255); // Color aleatorio
+		glColor3f(0.2 + 0.2/4 *i, 0.9 - 0.5/4 *i, 0.9 - 0.9/4 *i); // Color degradado
 		glCallList(triangulo1);
 		glCallList(triangulo2);
 		glPopMatrix();
@@ -125,19 +125,17 @@ void display()
 	glPopMatrix();
 	
 	/** Linea marca segundos **/
-
-    glColor3f(0.5,0,1);
+	glColor3f(0.4,0,1);
     glLineWidth(6.0);
     glPushMatrix();
     glRotatef((360/60) * newtime->tm_sec,0.0,0.0,-1.0);
     glBegin(GL_LINES);
-    glVertex2f(0,0);
+    glVertex2f(0,0.1);
     glVertex2f(0,0.85);
     glEnd();
 	glPopMatrix();
 
 	/** Cono marca minutos **/
-
     glColor3f(0,0,0);
 	glLineWidth(2.0);
     glPushMatrix();
@@ -148,16 +146,16 @@ void display()
     glPopMatrix();
 
 	/** Triangulo marca horas **/
-
 	glPushMatrix();
 	glColor3f(0.7,0,0); // Color Rojo
 	glScalef(0.1,0.1,0.1); // Diametro 1/10
 	glRotatef((360/12) * newtime->tm_hour, 0.0, 0.0, -1.0);
-	glTranslatef(0,7,0); // Lo trasladamos hacia arriba (eje y)
+	glTranslatef(0,6,0); // Lo trasladamos hacia arriba (eje y)
+	glScalef(gamma,gamma,gamma); // Rotacion sobre eje y
 	glCallList(triangulo1);
 	glPopMatrix();
 
-	// Intercambiar el buffer back por el front (evitamos flickering)
+	// Intercambiar el buffer back por el front
 	glutSwapBuffers();
 }
 
@@ -191,16 +189,22 @@ void reshape(GLint w, GLint h)
 
 void onTimer(int tiempo)
 {
-	// Funcion de atencion
-	rx = 30 * cos(alfa);
-	ry = 30 * sin(alfa);
-	rz = 30 * cos(alfa);
+	// Funcion de atencion al evento onTimer (update)
+	alfa += 0.01; 
+	if (alfa > 2*PI) alfa = 0; // Si completa la vuelta, empieza de nuevo
 
-	alfa += 0.01;
-	if (alfa > 2*PI) alfa = 0;
+	beta  += 2; // Estrellas centrales
+	
+	if (crece == true){ // Aguja horas
+		gamma += 0.005;
+		if (gamma >= 2) crece = false;
+	}else{
+		if (gamma <= 0.75) crece = true;
+		gamma -= 0.005;
+	}
 
 	glutPostRedisplay();
-	glutTimerFunc(100, onTimer, 1);
+	glutTimerFunc(10, onTimer, 1);
 }
 
 void main(int argc, char** argv)
