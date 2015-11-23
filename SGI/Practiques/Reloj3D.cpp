@@ -2,7 +2,7 @@
 	Practica 5 SGI
 	Reloj Analógico 3D Animado
 */
-
+#include <sstream>
 #include <Utilidades.h>		// Libreria completa
 #include <time.h>			// Libreria tiempo
 
@@ -12,6 +12,35 @@ time_t ltime;
 static float alfa,beta,gamma;
 static bool crece = true;
 static GLuint triangulo1, triangulo2, puntos;
+
+#define tasaFPS 60 // Para que mantenga 60 fps
+
+void FPS()
+{
+	// Muestra en la barra de titulo los FPS
+	int ahora, tiempo_transcurrido;
+	static int antes = glutGet(GLUT_ELAPSED_TIME);
+	static int fotogramas = 0;
+
+	// Cada vez que se llame a esta funcion se incrementa fotogramas
+	fotogramas ++;
+
+	// Tiempo transcurrido
+	ahora = glutGet(GLUT_ELAPSED_TIME);
+	tiempo_transcurrido = ahora - antes;
+
+	// Si ha transcurrido mas de 1 sg, muestro los FPS y reinicio el reloj
+	if (tiempo_transcurrido > 1000){
+		// modifico el texto de la barra de titulo
+		stringstream titulo;
+		titulo << "FPS estrellas = " << fotogramas;
+		glutSetWindowTitle(titulo.str().c_str());
+		// Reinicio el reloj y la cuenta de fotogramas
+		antes = ahora;
+		fotogramas = 0;
+	}
+
+}
 
 void init()
 {
@@ -111,6 +140,7 @@ void display()
 	glPushMatrix();
 	glScalef(0.25,0.25,0.25); // Diametro 1/10
 	glRotatef(beta,0,1,0); // Rotacion constante sobre eje y
+	FPS(); // Muertra FPS a los que giran las estrellas
 
 	int pos = 0; // Inicialmente 0º
 	for (int i=0; i<4; i++){ // Dibuja 4 estrellas
@@ -153,6 +183,7 @@ void display()
 	glTranslatef(0,6,0); // Lo trasladamos hacia arriba (eje y)
 	glScalef(gamma,gamma,gamma); // Rotacion sobre eje y
 	glCallList(triangulo1);
+	//FPS(); // Muertra FPS a los que cambia de tamaño
 	glPopMatrix();
 
 	// Intercambiar el buffer back por el front
@@ -187,9 +218,9 @@ void reshape(GLint w, GLint h)
 	gluPerspective(18, razon, 1, 10); // razon aspecto == razon marco, distancias
 }
 
-void onTimer(int tiempo)
+void update()
 {
-	// Funcion de atencion al evento onTimer (update)
+	// Funcion de atencion al evento "estoy ocioso"
 	alfa += 0.01; 
 	if (alfa > 2*PI) alfa = 0; // Si completa la vuelta, empieza de nuevo
 
@@ -219,8 +250,18 @@ void onTimer(int tiempo)
 	// Actualizar hora_anterior a la hora_actual
 	hora_anterior = hora_actual;
 
-	glutPostRedisplay();
-	glutTimerFunc(10, onTimer, 1);
+	glutPostRedisplay(); // Encola evento de display
+}
+
+void onTimer(int tiempo)
+{
+	// Funcion de atencion a la cuenta atras
+
+	// Encolar un nuevo timer
+	glutTimerFunc(tiempo, onTimer, tiempo);
+
+	// Actualizar la escena
+	update();	
 }
 
 void main(int argc, char** argv)
@@ -236,13 +277,13 @@ void main(int argc, char** argv)
 	// Inicializacion propia
 	init();
 
-	std::cout << "Running 3D Clock..." << std::endl; // Mensaje por consola
+	std::cout << "Running Analogic 3D Clock..." << std::endl; // Mensaje por consola
 
 	// Registro las callbacks
 	glutDisplayFunc(display); // Funcion atendida por la de display de arriba
 	glutReshapeFunc(reshape);
 
-	glutTimerFunc(10, onTimer, 1);
+	glutTimerFunc(1000/tasaFPS, onTimer, 1000/tasaFPS);
 
 	// Pongo en marcha el bucle de atencion a evento
 	glutMainLoop();
