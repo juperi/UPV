@@ -2,7 +2,7 @@
 import sys
 
 ########################################################
-########  Backtracking 1: Parejas de Skolem	############
+########  Backtracking 1: Parejas de Skolem	########
 ########################################################
 # Julia Penadés
 
@@ -12,13 +12,13 @@ def mostra_solucions(p):
 def parejas(n,allSolutions):
 	# crear i inicializar vectors accesibles per backtracking
 	sol = [None] * n		# Solucions
-	ocu = [False] * (2*n)	# Ocupats (long solucions*2)
-	parejas = []			# Cadena amb solucions backtracking
+	ocu = [False] * (2*n)		# Ocupats (long solucions*2)
+	par = []			# Cadena amb solucions backtracking
 	
 	def backtracking(index):
 		
 		if index == -1:	# Final de l'arbre
-			parejas.append(sol[:])
+			par.append(sol[:])
 			return True
 		
 		# i+1, primer nombre en posicio 0
@@ -36,11 +36,11 @@ def parejas(n,allSolutions):
 			
 		return allSolutions
 	
-	# Recorrem l'abre desde els valors mes alts (sol rapida)	
+	# Recorrem l'arbre desde els valors mes alts (sol rapida)	
 	if n%4 not in [0,1] or not backtracking(n-1):
 		return "NO HAY SOLUCION"
 	# generar i retornar cadena resultant
-	return parejas
+	return par
 
 if __name__ == "__main__":
 	if len(sys.argv) not in [2,3]:
