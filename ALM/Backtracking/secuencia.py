@@ -40,7 +40,6 @@ def secuencia(n, allSolutions):
 			
 		return allSolutions
 
-	# Recorrem l'abre desde els valors mes alts (sol rapida)	
 	if n%4 not in [0,1] or not backtracking(0):
 		return "NO HAY SOLUCION"
 	# generar i retornar cadena resultant
