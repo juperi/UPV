@@ -12,35 +12,36 @@ def mostra_solucions(s):
 def secuencia(n, allSolutions):
 	# crear i inicializar vectors accesibles per backtracking
 	sol = [None] * (2*n)	# Solucions (long 2*n per guardar directament)
-	ocu = [False] * n		# Ocupats (long n)
-	sec = []			# Cadena amb solucions backtracking
+	ocu = [False] * (2*n)	# Ocupats (long n)
+	sec = []				# Cadena amb solucions backtracking
 	
 	# Metode que busca secuencia directament
-	def backtracking(index): # funcio local o clausura
-		
-		while index < 2*n and sol[index] != None:
-			index+=1
-		if index == 2*n: # Final de l'arbre
+	def backtracking(index):
+
+		if index == -1:	# Final de l'arbre
 			sec.append(sol[:])
 			return True
-
+		
 		# i+1, primer nombre en posicio 0
-		for i in xrange(n):
-			if (ocu[i] == False and index+i+1 < 2*n): # No esta ocupat, i no pasa de 2n
+		for i in xrange(len(ocu)-index-1):
+			if (ocu[i] == False and ocu[index+i+1] == False):
 				ocu[i] = True
-				sol[index] = i+1
-				sol[index+i+1] = i+1
+				ocu[index+i+1] = True
+				sol[i] = index+1				# Pos 1 index (index+1)
+				sol[i + index+1] = index+1		# Pos 2 index
 
 				# Si acaba una branca (o demana totes les sol), reinicialitza
-				if not backtracking (index) or allSolutions: 
+				if not backtracking (index-1) or allSolutions: 
 					ocu[i] = False
-					sol[index] = None
-					sol[index+i+1] = None
+					ocu[index+i+1] = False
+					sol[i] = None
+					sol[i + index+1] = None 
 				else: return True
 			
 		return allSolutions
-
-	if n%4 not in [0,1] or not backtracking(0):
+	
+	# Recorrem l'abre desde els valors mes alts (sol rapida)	
+	if n%4 not in [0,1] or not backtracking(n-1):
 		return "NO HAY SOLUCION"
 	# generar i retornar cadena resultant
 	return sec
